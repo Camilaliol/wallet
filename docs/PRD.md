@@ -21,7 +21,7 @@ Compostos maioritariamente por estudantes universitários e jovens profissionais
 
 ---
 
-## 📋 1. Declaração de Problema
+## 1. Declaração de Problema
 
 **Os utilizadores sentem dificuldades em gerir o seu orçamento diário devido à falta de visibilidade financeira em tempo real e à complexidade em registar transações manualmente.**
 
@@ -31,7 +31,7 @@ Compostos maioritariamente por estudantes universitários e jovens profissionais
 
 ---
 
-## 👤 2. Perfil de Público-Alvo: O Jovem Adulto Conectado
+## 2. Perfil de Público-Alvo: O Jovem Adulto Conectado
 
 ### Visão Geral
 
