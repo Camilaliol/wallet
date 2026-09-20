@@ -1,4 +1,4 @@
-import 'package:app/paginas/pagina_principal.dart';
+import 'package:app/paginas/principal.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wallet',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const PaginaPrincipal(
+      home: const Principal(
         title: 'Wallet',
       ), // chamando a pagina principal_importou
     );
