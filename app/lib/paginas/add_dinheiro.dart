@@ -8,7 +8,24 @@ class AddDinheiro extends StatefulWidget {
 }
 
 class _AddDinheiroState extends State<AddDinheiro> {
-  int _saldo = 0;
+  // Adicionar variaveis
+  final _descricao = TextEditingController(); //add variaveis
+  final _valor = TextEditingController(); // add Variaveis
+  final _data = TextEditingController(); // add Variaveis
+  final _categoria = TextEditingController(); //add variaveis
+
+  void _salvar() {
+    //uma função que não retorna nada ou seja sem valor
+    final Map<String, dynamic> deposito = {
+      //local onde as variaveis estao sendo agrupadas para criaçao de uma lista
+      'descricao': _descricao.text,
+      'valor': _valor.text,
+      'data': _data.text,
+      'categoria': _categoria.text,
+    };
+
+    Navigator.pop(context, deposito);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +43,7 @@ class _AddDinheiroState extends State<AddDinheiro> {
             mainAxisAlignment: .center,
             children: [
               TextField(
+                controller: _descricao, //chamndo a variavel
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -34,6 +52,7 @@ class _AddDinheiroState extends State<AddDinheiro> {
                 ),
               ),
               TextField(
+                controller: _valor, // chamando a variavel
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -42,6 +61,7 @@ class _AddDinheiroState extends State<AddDinheiro> {
                 ),
               ),
               TextField(
+                controller: _data, //chamando a variavel
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -50,6 +70,7 @@ class _AddDinheiroState extends State<AddDinheiro> {
                 ),
               ),
               TextField(
+                controller: _categoria, //chamando a variavel
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -58,7 +79,7 @@ class _AddDinheiroState extends State<AddDinheiro> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: _salvar,
                 child: Text("Salvar"),
               ), // botao de salvar os dados de dinheiro
             ],

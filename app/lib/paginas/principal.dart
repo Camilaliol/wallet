@@ -11,7 +11,35 @@ class Principal extends StatefulWidget {
 }
 
 class _PrincipalState extends State<Principal> {
+  final List<Map<String, dynamic>> _historico = [
+    {
+      'descricao': "salario",
+      'data': "27/09/2026",
+      'valor': "2000",
+      'categoria': "salario",
+    },
+  ]; //criando uma lista
+
   int _saldo = 0;
+
+  void _abrirAddDinheiro() async {
+    final deposito = await Navigator.push(
+      // comando que navega entre as paginas
+      context,
+      MaterialPageRoute(builder: (context) => const AddDinheiro()),
+    );
+
+    if (deposito != null) {
+      //verifica se o valor não esta vasio
+      setState(() {
+        _historico.add(deposito);
+      });
+
+      setState(() {
+        _saldo += int.tryParse(deposito['valor']) ?? 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +62,26 @@ class _PrincipalState extends State<Principal> {
               children: [
                 // adicionando textos para os futuros botoes
                 TextButton(
+                  onPressed: _abrirAddDinheiro,
                   child: const Text("Add dinheiro"),
-                  onPressed: () {
-                    Navigator.push(
-                      // comando que navega entre as paginas
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddDinheiro(),
-                      ),
-                    );
-                  },
                 ),
                 Text("Add despesas"),
                 Text("Análises"),
               ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _historico.length,
+                itemBuilder: (context, index) {
+                  final item = _historico[index];
+
+                  return ListTile(
+                    title: Text(
+                      " ${item['data']}     ${item['categoria']}   €: ${item['valor']}",
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
