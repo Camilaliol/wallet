@@ -1,5 +1,6 @@
 import 'package:app/paginas/add_dinheiro.dart';
 import 'package:flutter/material.dart';
+import 'package:app/paginas/add_despesa.dart';
 
 class Principal extends StatefulWidget {
   const Principal({super.key, required this.title});
@@ -22,6 +23,7 @@ class _PrincipalState extends State<Principal> {
 
   int _saldo = 0;
 
+  
   void _abrirAddDinheiro() async {
     final deposito = await Navigator.push(
       // comando que navega entre as paginas
@@ -41,8 +43,28 @@ class _PrincipalState extends State<Principal> {
     }
   }
 
+  void _abrirAddDespesa() async {
+    final deposito = await Navigator.push(
+      // comando que navega entre as paginas
+      context,
+      MaterialPageRoute(builder: (context) => const AddDespesa()),
+    );
+
+    if (deposito != null) {
+      //verifica se o valor não esta vasio
+      setState(() {
+        _historico.add(deposito);
+      });
+
+      setState(() {
+        _saldo -= int.tryParse(deposito['valor']) ?? 0;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    //var newVariable =0; neste momento não esta sendo chamada a variavel newVariable, por isso esta comentada
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -57,19 +79,25 @@ class _PrincipalState extends State<Principal> {
             Text("€$_saldo", style: TextStyle(fontSize: 24)),
             Row(
               spacing: 40, // espaçamento do texto
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // centralizando o texto
+              mainAxisAlignment: 
+              MainAxisAlignment.center, // centralizando o texto
               children: [
                 // adicionando textos para os futuros botoes
                 TextButton(
                   onPressed: _abrirAddDinheiro,
                   child: const Text("Add dinheiro"),
                 ),
-                Text("Add despesas"),
+                TextButton(
+                  onPressed: _abrirAddDespesa,
+                  child: const Text("Add despesa"),
+                ),
                 Text("Análises"),
               ],
+
             ),
-            Expanded(
+                
+            
+            Expanded( 
               child: ListView.builder(
                 itemCount: _historico.length,
                 itemBuilder: (context, index) {
@@ -83,9 +111,9 @@ class _PrincipalState extends State<Principal> {
                 },
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+          ], // Fecha o children da Column
+        ), // Fecha a Column
+      ), // Fecha o Center
+    ); // Fecha o Scaffold e o return
+  } // Fecha o método build (Sem ponto e vírgula)
+} // Fecha a classe _PrincipalState (Sem ponto e vírgula)
