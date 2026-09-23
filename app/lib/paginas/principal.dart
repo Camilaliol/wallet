@@ -12,18 +12,11 @@ class Principal extends StatefulWidget {
 }
 
 class _PrincipalState extends State<Principal> {
-  final List<Map<String, dynamic>> _historico = [
-    {
-      'descricao': "salario",
-      'data': "27/09/2026",
-      'valor': "2000",
-      'categoria': "salario",
-    },
-  ]; //criando uma lista
+  final List<Map<String, dynamic>> _historico = []; //criando uma lista
 
-  double _saldo = 0; // mariavel que vai receber o valor do saldo, double é o tipo de variavel para mais de um numero decimal
+  double _saldo =
+      0; // mariavel que vai receber o valor do saldo, double é o tipo de variavel para mais de um numero decimal
 
-  
   void _abrirAddDinheiro() async {
     final deposito = await Navigator.push(
       // comando que navega entre as paginas
@@ -38,7 +31,7 @@ class _PrincipalState extends State<Principal> {
       });
 
       setState(() {
-        _saldo += int.tryParse(deposito['valor']) ?? 0;
+        _saldo += deposito['valor'];
       });
     }
   }
@@ -57,7 +50,7 @@ class _PrincipalState extends State<Principal> {
       });
 
       setState(() {
-        _saldo -= int.tryParse(deposito['valor']) ?? 0;
+        _saldo -= deposito['valor'];
       });
     }
   }
@@ -74,13 +67,13 @@ class _PrincipalState extends State<Principal> {
       body: Center(
         child: Column(
           mainAxisAlignment: .center,
-          spacing: 250,
+          spacing: 150,
           children: [
-            Text("€$_saldo", style: TextStyle(fontSize: 24)),
+            Text(" $_saldo €", style: TextStyle(fontSize: 50)),
             Row(
-              spacing: 40, // espaçamento do texto
-              mainAxisAlignment: 
-              MainAxisAlignment.center, // centralizando o texto
+              spacing: 50, // espaçamento do texto
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // centralizando o texto
               children: [
                 // adicionando textos para os futuros botoes
                 TextButton(
@@ -93,25 +86,23 @@ class _PrincipalState extends State<Principal> {
                 ),
                 Text("Análises"),
               ],
-
             ),
-                
-            
-            Expanded( 
+
+            Expanded(
               child: ListView.builder(
                 itemCount: _historico.length,
                 itemBuilder: (context, index) {
                   final item = _historico[index];
                   String valorMostrar;
                   if (item['tipos'] == 'despesa,') {
-                    valorMostrar = "-€${item['valor']}";
+                    valorMostrar = "- ${item['valor']}";
                   } else {
-                    valorMostrar = "+€${item['valorNumerico']}";
+                    valorMostrar = "+ ${item['valor']}";
                   }
 
                   return ListTile(
                     title: Text(
-                      " ${item['data']}     ${item['categoria']}   $valorMostrar",
+                      " ${item['data']}     ${item['descricao']}   $valorMostrar",
                     ),
                   );
                 },
