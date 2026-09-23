@@ -31,7 +31,7 @@ class _PrincipalState extends State<Principal> {
       });
 
       setState(() {
-        _saldo += deposito['valor'];
+        _saldo += deposito['valor'].getDouble();
       });
     }
   }
@@ -50,7 +50,7 @@ class _PrincipalState extends State<Principal> {
       });
 
       setState(() {
-        _saldo -= deposito['valor'];
+        _saldo -= deposito['valor'].getDouble();
       });
     }
   }
@@ -95,14 +95,16 @@ class _PrincipalState extends State<Principal> {
                   final item = _historico[index];
                   String valorMostrar;
                   if (item['tipos'] == 'despesa,') {
-                    valorMostrar = "- ${item['valor']}";
+                    valorMostrar =
+                        "- €${item['valor'].getDouble().toStringAsFixed(2)}";
                   } else {
-                    valorMostrar = "+ ${item['valor']}";
+                    valorMostrar =
+                        "+ €${item['valor'].getDouble().toStringAsFixed(2)}";
                   }
 
                   return ListTile(
                     title: Text(
-                      " ${item['data']}     ${item['descricao']}   $valorMostrar",
+                      " ${item['data']} ${item['descricao']}   $valorMostrar",
                     ),
                   );
                 },
