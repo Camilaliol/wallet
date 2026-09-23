@@ -24,6 +24,7 @@ void _salvar() {
       'valor': _valor.text,
       'data': _data.text,
       'categoria': _categoria.text,
+      'tipos':'despesa,'
     };
 
     Navigator.pop(context, despesa);

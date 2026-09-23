@@ -21,7 +21,7 @@ class _PrincipalState extends State<Principal> {
     },
   ]; //criando uma lista
 
-  int _saldo = 0;
+  double _saldo = 0; // mariavel que vai receber o valor do saldo, double é o tipo de variavel para mais de um numero decimal
 
   
   void _abrirAddDinheiro() async {
@@ -102,10 +102,16 @@ class _PrincipalState extends State<Principal> {
                 itemCount: _historico.length,
                 itemBuilder: (context, index) {
                   final item = _historico[index];
+                  String valorMostrar;
+                  if (item['tipos'] == 'despesa,') {
+                    valorMostrar = "-€${item['valor']}";
+                  } else {
+                    valorMostrar = "+€${item['valorNumerico']}";
+                  }
 
                   return ListTile(
                     title: Text(
-                      " ${item['data']}     ${item['categoria']}   €: ${item['valor']}",
+                      " ${item['data']}     ${item['categoria']}   $valorMostrar",
                     ),
                   );
                 },

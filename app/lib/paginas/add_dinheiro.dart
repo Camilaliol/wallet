@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 class AddDinheiro extends StatefulWidget {
   const AddDinheiro({super.key});
 
@@ -12,16 +12,23 @@ class _AddDinheiroState extends State<AddDinheiro> {
   final _descricao = TextEditingController(); //add variaveis
   final _valor = TextEditingController(); // add Variaveis
   final _data = TextEditingController(); // add Variaveis
-  final _categoria = TextEditingController(); //add variaveis
+  final _categoria = TextEditingController();
+  final _formatter = CurrencyTextInputFormatter.currency(
+    locale: 'pt_pt',
+    symbol: '€',
+    decimalDigits: 2,
+  ); //add variaveis
 
   void _salvar() {
+    double valorNumerico = _formatter.getDouble();
     //uma função que não retorna nada ou seja sem valor
     final Map<String, dynamic> deposito = {
       //local onde as variaveis estao sendo agrupadas para criaçao de uma lista
       'descricao': _descricao.text,
-      'valor': _valor.text,
+      'valor': valorNumerico.toStringAsFixed(2), // Convertendo o valor para string
       'data': _data.text,
       'categoria': _categoria.text,
+      'tipos':'deposito,'
     };
 
     Navigator.pop(context, deposito);
@@ -51,13 +58,16 @@ class _AddDinheiroState extends State<AddDinheiro> {
                   labelText: 'Descrição',
                 ),
               ),
-              TextField(
-                controller: _valor, // chamando a variavel
+              TextField(// chamando a variavel
+                controller: _valor,
+                keyboardType:TextInputType.number, // Este finha abre o teclado numerico
+                inputFormatters:[_formatter], // Este finha formata o valor para moeda
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   labelText: 'Valor',
+                  hintText: '€ 0,00', // Este mostra o valor para dar exemplo ao utilizador
                 ),
               ),
               TextField(
