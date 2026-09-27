@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart'; //importando o pacote de formatação de valor
 import 'package:intl/intl.dart';
+import 'package:app/theme/app_theme.dart';
 
 class AddDespesa extends StatefulWidget {
   const AddDespesa({super.key});

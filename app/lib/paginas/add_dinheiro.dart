@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart'; //importando da biblioteca de valores de moeda
 import 'package:intl/intl.dart'; // importando os dados da biblioteca de data
+import 'package:app/theme/app_theme.dart';
 
 class AddDinheiro extends StatefulWidget {
   const AddDinheiro({super.key});

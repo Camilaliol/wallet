@@ -1,6 +1,8 @@
 import 'package:app/paginas/add_dinheiro.dart';
+import 'package:app/paginas/analises.dart';
 import 'package:flutter/material.dart';
 import 'package:app/paginas/add_despesa.dart';
+import 'package:app/theme/app_theme.dart';
 
 class Principal extends StatefulWidget {
   const Principal({super.key, required this.title});
@@ -69,6 +71,13 @@ class _PrincipalState extends State<Principal> {
     });
   }
 
+  void _abrirAnalises() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Analises(historico: _historico)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //var newVariable =0; neste momento não esta sendo chamada a variavel newVariable, por isso esta comentada
@@ -98,7 +107,11 @@ class _PrincipalState extends State<Principal> {
                   onPressed: _abrirAddDespesa,
                   child: const Text("Add despesa"),
                 ),
-                Text("Análises"),
+
+                TextButton(
+                  onPressed: _abrirAnalises,
+                  child: const Text('Analises'),
+                ),
               ],
             ),
 
