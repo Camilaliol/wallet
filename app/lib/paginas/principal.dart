@@ -55,6 +55,20 @@ class _PrincipalState extends State<Principal> {
     }
   }
 
+  void _removerItem(int index) {
+    setState(() {
+      final itemRemovido = _historico[index];
+      double valorDinheiro = itemRemovido['valor'].getDouble();
+
+      if (itemRemovido['tipos'] == 'despesa,') {
+        _saldo += valorDinheiro;
+      } else {
+        _saldo -= valorDinheiro;
+      }
+      _historico.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //var newVariable =0; neste momento não esta sendo chamada a variavel newVariable, por isso esta comentada
@@ -106,6 +120,13 @@ class _PrincipalState extends State<Principal> {
                     title: Text(
                       " ${item['data']} ${item['descricao']}   $valorMostrar",
                     ),
+                    // SE for despesa, adiciona o IconButton. SE NÃO, o trailing fica nulo automaticamente.
+                    trailing: item['tipos'] == 'despesa,'
+                        ? IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _removerItem(index),
+                          )
+                        : null,
                   );
                 },
               ),
