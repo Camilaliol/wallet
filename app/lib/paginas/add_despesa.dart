@@ -41,8 +41,27 @@ class _AddDespesaState extends State<AddDespesa> {
     }
   }
 
-  // add Variaveis
-  final _categoria = TextEditingController();
+  //Add variaveis
+
+  //Criação da lista de Categorias
+  final List<String> _listaCategorias = [
+    'Alimentação',
+    'Transporte',
+    'Lazer',
+    'Moradia e Contas',
+    'Saúde',
+    'Educação',
+    'Outros',
+  ];
+  String? _categoriaSelecionada;
+
+  // ETAPA 2: Definindo o valor inicial assim que a tela abre
+  @override
+  void initState() {
+    super.initState();
+    // Pegamos a primeira palavra da lista ('Alimentação') e guardamos na seleção
+    _categoriaSelecionada = _listaCategorias.first;
+  }
 
   //add variaveis
   final _formatter = CurrencyTextInputFormatter.currency(
@@ -62,7 +81,8 @@ class _AddDespesaState extends State<AddDespesa> {
 
       'data': _data.text,
 
-      'categoria': _categoria.text,
+      'categoria':
+          _categoriaSelecionada, // envia para a parte pagina inicial a categoria que foi escolhida
 
       'tipos': 'despesa,',
     };
@@ -118,15 +138,33 @@ class _AddDespesaState extends State<AddDespesa> {
                 ),
                 onTap: () => _selecionarData(context),
               ),
-              TextField(
-                controller: _categoria, //chamando a variavel
-                decoration: InputDecoration(
+              DropdownButtonFormField<String>(
+                // Diz para o Flutter qual categoria deve aparecer desenhada primeiro
+                value: _categoriaSelecionada,
+
+                // Configura a borda arredondada e o texto igual ao seu TextField antigo
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   labelText: 'Categoria',
                 ),
+                items: _listaCategorias.map(
+                  (String textoDaCategoria) {
+                    return DropdownMenuItem<String>(
+                      value: textoDaCategoria,
+                      child: Text(textoDaCategoria),
+                    );
+                  },
+                ).toList(), // Ele fecha a entrada de opções que ja estao prontas
+                //Onchanged ele roda toda vez que é escolida uma nova opção diferenre
+                onChanged: (String? novaOpcaoClicada) {
+                  setState(() {
+                    _categoriaSelecionada = novaOpcaoClicada;
+                  });
+                },
               ),
+
               TextButton(
                 onPressed: _salvar,
                 child: Text("Salvar"),
