@@ -94,60 +94,54 @@ class _AddDespesaState extends State<AddDespesa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text("Add Despesa"),
-      ),
-      body: Center(
-        child: SizedBox(
-          width: 450, // tamanho da coluna
+      appBar: AppBar(title: Text("Adicione suas Despesa")),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0), // tamanho da coluna
           child: Column(
-            // é preciso add o child para mudar a altura
-            mainAxisAlignment: .center,
+            crossAxisAlignment: CrossAxisAlignment
+                .stretch, // é preciso add o child para mudar a altura
             children: [
               TextField(
                 controller: _descricao, //chamndo a variavel
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  labelText: 'Descrição',
-                ),
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(labelText: 'Descrição'),
               ),
+              const SizedBox(height: 16),
+
               TextField(
                 controller: _valor,
                 keyboardType: TextInputType.number, // chamando a variavel
                 inputFormatters: [_formatter],
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  labelText: 'Valor',
-                ),
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(labelText: 'Valor'),
               ),
+              const SizedBox(height: 16),
+
               TextField(
                 controller: _data, //chamando a variavel
                 readOnly: true, //Impede que o usuario escreva
                 decoration: const InputDecoration(
                   labelText: 'Data da transação',
                   hintText: 'Selecione uma data',
-                  suffixIcon: Icon(Icons.calendar_today), //iconi de calendario
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
+                  suffixIcon: Icon(
+                    Icons.calendar_today,
+                    color: AppTheme.corCianoNeon,
+                  ), //iconi de calendario
                 ),
                 onTap: () => _selecionarData(context),
               ),
+              const SizedBox(height: 16),
+
               DropdownButtonFormField<String>(
                 // Diz para o Flutter qual categoria deve aparecer desenhada primeiro
                 value: _categoriaSelecionada,
-
-                // Configura a borda arredondada e o texto igual ao seu TextField antigo
+                dropdownColor: const Color(
+                  0xFF161035,
+                ), // coloca o fundo do menu
+                style: const TextStyle(color: Colors.white, fontSize: 16),
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
+                  // Configura a borda arredondada e o texto igual ao seu TextField antigo
                   labelText: 'Categoria',
                 ),
                 items: _listaCategorias.map(
@@ -165,6 +159,7 @@ class _AddDespesaState extends State<AddDespesa> {
                   });
                 },
               ),
+              const SizedBox(height: 40), // espaço entre o botão de ação
 
               TextButton(
                 onPressed: _salvar,
