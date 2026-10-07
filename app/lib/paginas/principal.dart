@@ -3,6 +3,7 @@ import 'package:app/paginas/analises.dart';
 import 'package:flutter/material.dart';
 import 'package:app/paginas/add_despesa.dart';
 import 'package:app/theme/app_theme.dart';
+import 'dart:ui';
 
 class Principal extends StatefulWidget {
   const Principal({super.key, required this.title});
@@ -14,20 +15,17 @@ class Principal extends StatefulWidget {
 }
 
 class _PrincipalState extends State<Principal> {
-  final List<Map<String, dynamic>> _historico = []; //criando uma lista
+  final List<Map<String, dynamic>> _historico = [];
 
-  double _saldo =
-      0; // mariavel que vai receber o valor do saldo, double é o tipo de variavel para mais de um numero decimal
+  double _saldo = 0;
 
   void _abrirAddDinheiro() async {
     final deposito = await Navigator.push(
-      // comando que navega entre as paginas
       context,
       MaterialPageRoute(builder: (context) => const AddDinheiro()),
     );
 
     if (deposito != null) {
-      //verifica se o valor não esta vasio
       setState(() {
         _historico.add(deposito);
       });
@@ -40,13 +38,11 @@ class _PrincipalState extends State<Principal> {
 
   void _abrirAddDespesa() async {
     final deposito = await Navigator.push(
-      // comando que navega entre as paginas
       context,
       MaterialPageRoute(builder: (context) => const AddDespesa()),
     );
 
     if (deposito != null) {
-      //verifica se o valor não esta vasio
       setState(() {
         _historico.add(deposito);
       });
@@ -80,73 +76,154 @@ class _PrincipalState extends State<Principal> {
 
   @override
   Widget build(BuildContext context) {
-    //var newVariable =0; neste momento não esta sendo chamada a variavel newVariable, por isso esta comentada
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          spacing: 150,
-          children: [
-            Text(" $_saldo €", style: TextStyle(fontSize: 50)),
-            Row(
-              spacing: 50, // espaçamento do texto
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // centralizando o texto
-              children: [
-                // adicionando textos para os futuros botoes
-                TextButton(
-                  onPressed: _abrirAddDinheiro,
-                  child: const Text("Add dinheiro"),
+      appBar: AppBar(title: Text(widget.title)),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 30.0,
+            left: 16.0,
+            right: 16.0,
+            bottom: 16.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text(
+                'Saldo Disponível',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white54,
+                  fontWeight: FontWeight.w500,
                 ),
-                TextButton(
-                  onPressed: _abrirAddDespesa,
-                  child: const Text("Add despesa"),
-                ),
-
-                TextButton(
-                  onPressed: _abrirAnalises,
-                  child: const Text('Analises'),
-                ),
-              ],
-            ),
-
-            Expanded(
-              child: ListView.builder(
-                itemCount: _historico.length,
-                itemBuilder: (context, index) {
-                  final item = _historico[index];
-                  String valorMostrar;
-                  if (item['tipos'] == 'despesa,') {
-                    valorMostrar =
-                        "- €${item['valor'].getDouble().toStringAsFixed(2)}";
-                  } else {
-                    valorMostrar =
-                        "+ €${item['valor'].getDouble().toStringAsFixed(2)}";
-                  }
-
-                  return ListTile(
-                    title: Text(
-                      " ${item['data']} ${item['descricao']}   $valorMostrar",
-                    ),
-                    // SE for despesa, adiciona o IconButton. SE NÃO, o trailing fica nulo automaticamente.
-                    trailing: item['tipos'] == 'despesa,'
-                        ? IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _removerItem(index),
-                          )
-                        : null,
-                  );
-                },
               ),
-            ),
-          ], // Fecha o children da Column
-        ), // Fecha a Column
-      ), // Fecha o Center
-    ); // Fecha o Scaffold e o return
-  } // Fecha o método build (Sem ponto e vírgula)
-} // Fecha a classe _PrincipalState (Sem ponto e vírgula)
+
+              const SizedBox(height: 12),
+
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 40,
+                    ),
+                    decoration: AppTheme.caixaCustomizada,
+                    child: Text(
+                      "${_saldo.toStringAsFixed(2)} €",
+                      style: const TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 35),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: _abrirAddDinheiro,
+                    child: const Text("Add dinheiro"),
+                  ),
+                  ElevatedButton(
+                    onPressed: _abrirAddDespesa,
+                    child: const Text("Add despesa"),
+                  ),
+                  ElevatedButton(
+                    onPressed: _abrirAnalises,
+                    child: const Text('Análises'),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _historico.length,
+                  itemBuilder: (context, index) {
+                    final item = _historico[index];
+                    String valorMostrar;
+                    if (item['tipos'] == 'despesa,') {
+                      valorMostrar =
+                          "- €${item['valor'].getDouble().toStringAsFixed(2)}";
+                    } else {
+                      valorMostrar =
+                          "+ €${item['valor'].getDouble().toStringAsFixed(2)}";
+                    }
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: item['tipos'] == 'despesa,'
+                            ? AppTheme.corDespesa.withOpacity(0.15)
+                            : AppTheme.corDinheiro.withOpacity(0.15),
+                        child: Icon(
+                          item['tipos'] == 'despesa,'
+                              ? Icons.arrow_downward
+                              : Icons.arrow_upward,
+                          color: item['tipos'] == 'despesa,'
+                              ? AppTheme.corDespesa
+                              : AppTheme.corDinheiro,
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        item['descricao'] ?? 'Sem descrição',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+
+                      // Data organizada como um subtítulo pequeno e discreto
+                      subtitle: Text(
+                        item['data'] ?? '',
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 12,
+                        ),
+                      ),
+                      // Valor financeiro alinhado perfeitamente no lado direito
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            valorMostrar,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: item['tipos'] == 'despesa,'
+                                  ? AppTheme.corDespesa
+                                  : AppTheme.corDinheiro,
+                            ),
+                          ),
+                          if (item['tipos'] == 'despesa,') ...[
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: AppTheme.corDespesa,
+                                size: 20,
+                              ),
+                              onPressed: () => _removerItem(index),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -74,63 +74,51 @@ class _AddDinheiroState extends State<AddDinheiro> {
 
         title: Text("Add Dinheiro"),
       ),
-      body: Center(
-        child: SizedBox(
-          width: 450, // tamanho da coluna
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0), // tamanho da coluna
           child: Column(
             // é preciso add o child para mudar a altura
-            mainAxisAlignment: .center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
                 controller: _descricao, //chamndo a variavel
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  labelText: 'Descrição',
-                ),
+                decoration: const InputDecoration(labelText: 'Descrição'),
               ),
+              const SizedBox(height: 16), //espaçameto entre os topicos
+
               TextField(
                 // chamando a variavel
                 controller: _valor,
                 keyboardType:
-                    TextInputType.number, // Este finha abre o teclado numerico
+                    TextInputType.number, // Este linha abre o teclado numerico
                 inputFormatters: [
                   _formatter,
                 ], // Este finha formata o valor para moeda
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
+                decoration: const InputDecoration(
                   labelText: 'Valor',
                   hintText:
                       '€ 0,00', // Este mostra o valor para dar exemplo ao utilizador
                 ),
               ),
-              //
+              const SizedBox(height: 16),
+
               TextField(
                 controller: _data, //chamando a variavel
                 readOnly: true, //Impede que o usuario escreva
                 decoration: const InputDecoration(
                   labelText: 'Data da transação',
                   hintText: 'Selecione uma data',
-                  suffixIcon: Icon(Icons.calendar_today), //iconi de calendario
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
+                  suffixIcon: Icon(
+                    Icons.calendar_today,
+                    color: AppTheme.corCianoNeon,
+                  ), //iconi de calendario
                 ),
                 onTap: () => _selecionarData(context),
               ),
-              //TextField(
-              //controller: _categoria, //chamando a variavel
-              //decoration: InputDecoration(
-              //border: OutlineInputBorder(
-              //borderRadius: BorderRadius.all(Radius.circular(15)),
-              //),
-              //labelText: 'Categoria',
-              //),
-              //),
-              TextButton(
+
+              const SizedBox(height: 40),
+              ElevatedButton(
                 onPressed: _salvar,
                 child: Text("Salvar"),
               ), // botao de salvar os dados de dinheiro

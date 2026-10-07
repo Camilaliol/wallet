@@ -19,13 +19,10 @@ class _AnalisesState extends State<Analises> {
 
     for (var item in widget.historico) {
       if (item['tipos'] == 'despesa,') {
-        // CORRIGIDO: Adicionado o '=' que faltava
         String categoria = item['categoria'] ?? 'Outros';
 
-        // Conversor seguro de texto/número para decimal (double)
-        double valor = item['valor'].getDouble();
+        double valor = 0.0; // Conversor texto para número para decimal (double)
 
-        // CORRIGIDO: Usando 'totais' (plural) e a variável 'categoria' (sem aspas)
         if (totais.containsKey(categoria)) {
           totais[categoria] =
               totais[categoria]! + valor; // Soma ao valor que já existia
@@ -38,131 +35,177 @@ class _AnalisesState extends State<Analises> {
     return totais; // Retorna o mapa calculado ex: {'Alimentação': 45.0, 'Lazer': 12.0}
   }
 
+  IconData _obterIconeCategoria(String categoria) {
+    switch (categoria.toLowerCase().trim()) {
+      case 'restauração':
+      case 'restauracao':
+      case 'alimentação':
+      case 'alimentacao':
+      case 'mercado':
+        return Icons.restaurant;
+
+      case 'transporte':
+      case 'combustível':
+      case 'combustivel':
+        return Icons.directions;
+
+      case 'lazer':
+      case 'viagem':
+        return Icons.local_play;
+
+      case 'financiamento':
+      case 'contas':
+      case 'arrendamento':
+      case 'moradia':
+        return Icons.home;
+
+      case 'seguro saúde':
+      case 'seguro saude':
+      case 'farmácia':
+      case 'farmacia':
+      case 'saúde':
+      case 'saude':
+        return Icons.medical_services;
+
+      case 'educação':
+      case 'educacao':
+        return Icons.school;
+
+      default:
+        return Icons.category;
+    }
+  }
+
   // Desenhho do Grafico
   @override
   Widget build(BuildContext contex) {
     final dadosCategorias = _calcularDespesasPorCategoria();
-
-    final List<Color> cores = [
-      const Color.fromARGB(255, 214, 44, 14),
-      const Color.fromARGB(255, 33, 219, 243),
-      const Color.fromARGB(255, 42, 234, 48),
-      const Color.fromARGB(255, 237, 13, 222),
-      const Color.fromARGB(255, 35, 21, 238),
-      const Color.fromARGB(255, 236, 217, 14),
-    ];
-    int corIndex = 0;
+    final cores = AppTheme.coresGrafico; //Puxa a lista de cores pre definidas
+    final listaEntradas = dadosCategorias.entries.toList();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Análise'),
-      ),
+      appBar: AppBar(title: const Text('Análise')),
       body: Center(
         child: dadosCategorias.isEmpty
             ? const Text(
-                "Nenhuma despesa para análisar !",
-                style: TextStyle(fontSize: 18),
+                "Nenhuma despesa para análisar!",
+                style: TextStyle(fontSize: 18, color: Colors.white70),
               )
             : Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Distribuição por Categoria",
-                      style: TextStyle(
-                        fontSize: 40, // aumentando o tamanho da letra
-                        fontWeight: FontWeight.bold,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Distribuição por Categoria",
+                        style: TextStyle(
+                          fontSize: 26, // aumentando o tamanho da letra
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10), // subindo o texto
-                    // A caixa que fica o desenho do grafico
-                    SizedBox(
-                      height:
-                          260, // Reduzido levemente para dar espaço à lista abaixo
-                      child: PieChart(
-                        PieChartData(
-                          centerSpaceRadius: 0,
-                          sectionsSpace: 2,
-                          sections: dadosCategorias.entries.map((entry) {
-                            final corAtual = cores[corIndex % cores.length];
-                            corIndex++;
+                      const SizedBox(height: 15), // subindo o texto
+                      // A caixa que fica o desenho do grafico
+                      SizedBox(
+                        height:
+                            240, // Reduzido levemente para dar espaço à lista abaixo
+                        child: PieChart(
+                          PieChartData(
+                            centerSpaceRadius: 0,
+                            sectionsSpace: 2,
+                            sections: List.generate(listaEntradas.length, (
+                              index,
+                            ) {
+                              final entry = listaEntradas[index];
+                              final corAtual = cores[index % cores.length];
 
-                            return PieChartSectionData(
-                              color: corAtual,
-                              value: entry.value,
-                              // Exibe apenas o valor ou % dentro da pizza para não poluir
-                              title: 'R\$${entry.value.toStringAsFixed(0)}',
-                              radius: 110,
-                              titleStyle: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                              return PieChartSectionData(
+                                color: corAtual,
+                                value: entry.value,
+                                // Exibe apenas o valor ou % dentro da pizza para não poluir
+                                title: 'R\$${entry.value.toStringAsFixed(0)}',
+                                radius: 105,
+                                titleStyle: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black54,
+                                      blurRadius: 3,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 25), //
+
+                      Container(
+                        padding: const EdgeInsets.all(14.0),
+                        decoration: AppTheme.caixaCustomizada,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: listaEntradas.map((entry) {
+                            final index = listaEntradas.indexOf(entry);
+                            final corCategoria = cores[index % cores.length];
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  //Círculo Neon com o Ícone da categoria dentro!
+                                  Container(
+                                    width: 34,
+                                    height: 34,
+                                    decoration: BoxDecoration(
+                                      color: corCategoria.withOpacity(0.15),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      _obterIconeCategoria(entry.key),
+                                      size: 18,
+                                      color:
+                                          corCategoria, // O ícone brilha na mesma cor da pizza
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+
+                                  // Nome da Categoria
+                                  Text(
+                                    entry.key,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Spacer(),
+
+                                  // Valor Total da Categoria
+                                  Text(
+                                    "R\$ ${entry.value.toStringAsFixed(2)}",
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors
+                                          .white, // Modificado para branco para destacar no fundo escuro
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
                           }).toList(),
                         ),
                       ),
-                    ),
-
-                    const SizedBox(height: 30), //
-
-                    Container(
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: dadosCategorias.entries.map((entry) {
-                          // Reinicia ou busca a cor correspondente para a legenda bater com a pizza
-
-                          final index = dadosCategorias.keys.toList().indexOf(
-                            entry.key,
-                          );
-                          final corCategoria = cores[index % cores.length];
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: Row(
-                              children: [
-                                // Quadradinho colorido da categoria
-                                Container(
-                                  width: 16,
-                                  height: 16,
-                                  decoration: BoxDecoration(
-                                    color: corCategoria,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                // Nome da Categoria
-                                Text(
-                                  entry.key,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const Spacer(), // Empurra o valor para a direita
-                                // Valor Total da Categoria
-                                Text(
-                                  "R\$ ${entry.value.toStringAsFixed(2)}",
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ], // Fim dos filhos da Column principal
+                    ],
+                  ),
                 ),
               ),
       ),

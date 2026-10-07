@@ -2,6 +2,7 @@ import 'package:app/paginas/principal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // faz com o flutter configure tudo antes de iniciar a tradução
@@ -24,12 +25,12 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       title: 'Wallet',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: AppTheme.temaDoAplicativo,
       supportedLocales: const [
         Locale('pt', 'PT'), // Português de Portugal
       ],
       home: const Principal(
-        title: 'Wallet',
+        title: 'Bem - vindo a sua carteira virtual!',
       ), // chamando a pagina principal_importou
     );
   }
