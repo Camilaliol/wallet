@@ -57,7 +57,7 @@ class _AddDinheiroState extends State<AddDinheiro> {
     final Map<String, dynamic> deposito = {
       //local onde as variaveis estao sendo agrupadas para criaçao de uma lista
       'descricao': _descricao.text,
-      'valor': _formatter, // Convertendo o valor para string
+      'valor': _formatter.getDouble(), // Convertendo o valor para string
       'data': _data.text,
       //'categoria': _categoria.text,
       'tipos': 'deposito,',

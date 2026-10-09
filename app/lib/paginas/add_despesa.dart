@@ -1,3 +1,4 @@
+import 'package:app/categorias.dart';
 import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart'; //importando o pacote de formatação de valor
 import 'package:intl/intl.dart';
@@ -44,16 +45,6 @@ class _AddDespesaState extends State<AddDespesa> {
 
   //Add variaveis
 
-  //Criação da lista de Categorias
-  final List<String> _listaCategorias = [
-    'Alimentação',
-    'Transporte',
-    'Lazer',
-    'Moradia e Contas',
-    'Saúde',
-    'Educação',
-    'Outros',
-  ];
   String? _categoriaSelecionada;
 
   // ETAPA 2: Definindo o valor inicial assim que a tela abre
@@ -61,7 +52,7 @@ class _AddDespesaState extends State<AddDespesa> {
   void initState() {
     super.initState();
     // Pegamos a primeira palavra da lista ('Alimentação') e guardamos na seleção
-    _categoriaSelecionada = _listaCategorias.first;
+    _categoriaSelecionada = categorias.first;
   }
 
   //add variaveis
@@ -78,7 +69,7 @@ class _AddDespesaState extends State<AddDespesa> {
       //local onde as variaveis estao sendo agrupadas para criaçao de uma lista
       'descricao': _descricao.text,
 
-      'valor': _formatter,
+      'valor': _formatter.getDouble(),
 
       'data': _data.text,
 
@@ -144,7 +135,7 @@ class _AddDespesaState extends State<AddDespesa> {
                   // Configura a borda arredondada e o texto igual ao seu TextField antigo
                   labelText: 'Categoria',
                 ),
-                items: _listaCategorias.map(
+                items: categorias.map(
                   (String textoDaCategoria) {
                     return DropdownMenuItem<String>(
                       value: textoDaCategoria,

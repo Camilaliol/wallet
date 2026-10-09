@@ -1,3 +1,4 @@
+import 'package:app/categorias.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:app/theme/app_theme.dart';
@@ -13,7 +14,6 @@ class Analises extends StatefulWidget {
 }
 
 class _AnalisesState extends State<Analises> {
-  DateTime? _mes;
   Map<String, double> _calcularDespesasPorCategoria() {
     Map<String, double> totais = {};
 
@@ -21,7 +21,8 @@ class _AnalisesState extends State<Analises> {
       if (item['tipos'] == 'despesa,') {
         String categoria = item['categoria'] ?? 'Outros';
 
-        double valor = 0.0; // Conversor texto para número para decimal (double)
+        double valor =
+            item['valor']; // Conversor texto para número para decimal (double)
 
         if (totais.containsKey(categoria)) {
           totais[categoria] =
@@ -32,48 +33,8 @@ class _AnalisesState extends State<Analises> {
         }
       }
     }
+
     return totais; // Retorna o mapa calculado ex: {'Alimentação': 45.0, 'Lazer': 12.0}
-  }
-
-  IconData _obterIconeCategoria(String categoria) {
-    switch (categoria.toLowerCase().trim()) {
-      case 'restauração':
-      case 'restauracao':
-      case 'alimentação':
-      case 'alimentacao':
-      case 'mercado':
-        return Icons.restaurant;
-
-      case 'transporte':
-      case 'combustível':
-      case 'combustivel':
-        return Icons.directions;
-
-      case 'lazer':
-      case 'viagem':
-        return Icons.local_play;
-
-      case 'financiamento':
-      case 'contas':
-      case 'arrendamento':
-      case 'moradia':
-        return Icons.home;
-
-      case 'seguro saúde':
-      case 'seguro saude':
-      case 'farmácia':
-      case 'farmacia':
-      case 'saúde':
-      case 'saude':
-        return Icons.medical_services;
-
-      case 'educação':
-      case 'educacao':
-        return Icons.school;
-
-      default:
-        return Icons.category;
-    }
   }
 
   // Desenhho do Grafico
@@ -169,7 +130,7 @@ class _AnalisesState extends State<Analises> {
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
-                                      _obterIconeCategoria(entry.key),
+                                      icones[entry.key],
                                       size: 18,
                                       color:
                                           corCategoria, // O ícone brilha na mesma cor da pizza

@@ -15,9 +15,45 @@ class Principal extends StatefulWidget {
 }
 
 class _PrincipalState extends State<Principal> {
-  final List<Map<String, dynamic>> _historico = [];
+  final List<Map<String, dynamic>> _historico = [
+    // {'descricao': 'Salario', 'valor': 2000, 'data': }
+    {
+      'descricao': 'Ordenado',
+      'valor': 10000.00,
+      'data': '01/10/2026',
+      'tipos': 'deposito',
+    },
+    {
+      'descricao': 'alimentacao',
+      'valor': 250.00,
+      'data': '02/10/2026',
+      'categoria': 'Alimentação',
+      'tipos': 'despesa,',
+    },
+    {
+      'descricao': 'remedio',
+      'valor': 50.00,
+      'data': '03/10/2026',
+      'categoria': 'Saúde',
+      'tipos': 'despesa,',
+    },
+    {
+      'descricao': 'cinema',
+      'valor': 50.00,
+      'data': '04/10/2026',
+      'categoria': 'Lazer',
+      'tipos': 'despesa,',
+    },
+    {
+      'descricao': 'aluguel',
+      'valor': 500.00,
+      'data': '05/10/2026',
+      'categoria': 'Moradia e Contas',
+      'tipos': 'despesa,',
+    },
+  ];
 
-  double _saldo = 0;
+  double _saldo = 9250.00;
 
   void _abrirAddDinheiro() async {
     final deposito = await Navigator.push(
@@ -31,24 +67,25 @@ class _PrincipalState extends State<Principal> {
       });
 
       setState(() {
-        _saldo += deposito['valor'].getDouble();
+        _saldo += deposito['valor'];
       });
     }
   }
 
   void _abrirAddDespesa() async {
-    final deposito = await Navigator.push(
+    final despesa = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const AddDespesa()),
     );
 
-    if (deposito != null) {
+    if (despesa != null) {
+      print(despesa);
       setState(() {
-        _historico.add(deposito);
+        _historico.add(despesa);
       });
 
       setState(() {
-        _saldo -= deposito['valor'].getDouble();
+        _saldo -= despesa['valor'];
       });
     }
   }
@@ -56,7 +93,7 @@ class _PrincipalState extends State<Principal> {
   void _removerItem(int index) {
     setState(() {
       final itemRemovido = _historico[index];
-      double valorDinheiro = itemRemovido['valor'].getDouble();
+      double valorDinheiro = itemRemovido['valor'];
 
       if (itemRemovido['tipos'] == 'despesa,') {
         _saldo += valorDinheiro;
@@ -151,11 +188,9 @@ class _PrincipalState extends State<Principal> {
                     final item = _historico[index];
                     String valorMostrar;
                     if (item['tipos'] == 'despesa,') {
-                      valorMostrar =
-                          "- €${item['valor'].getDouble().toStringAsFixed(2)}";
+                      valorMostrar = "- €${item['valor'].toStringAsFixed(2)}";
                     } else {
-                      valorMostrar =
-                          "+ €${item['valor'].getDouble().toStringAsFixed(2)}";
+                      valorMostrar = "+ €${item['valor'].toStringAsFixed(2)}";
                     }
                     return ListTile(
                       leading: CircleAvatar(
