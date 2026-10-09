@@ -148,7 +148,10 @@ class _AddDespesaState extends State<AddDespesa> {
                   (String textoDaCategoria) {
                     return DropdownMenuItem<String>(
                       value: textoDaCategoria,
-                      child: Text(textoDaCategoria),
+                      child: Text(
+                        textoDaCategoria,
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     );
                   },
                 ).toList(), // Ele fecha a entrada de opções que ja estao prontas
@@ -161,7 +164,7 @@ class _AddDespesaState extends State<AddDespesa> {
               ),
               const SizedBox(height: 40), // espaço entre o botão de ação
 
-              TextButton(
+              ElevatedButton(
                 onPressed: _salvar,
                 child: Text("Salvar"),
               ), // botao de salvar os dados de dinheiro
