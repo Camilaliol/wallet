@@ -54,6 +54,19 @@ class _PrincipalState extends State<Principal> {
   ];
 
   double _saldo = 9250.00;
+  //Historio de agrupamento por data
+  Map<String, List<Map<String, dynamic>>> _agruparPorData() {
+    Map<String, List<Map<String, dynamic>>> grupos = {};
+
+    for (var item in _historico) {
+      String data = item['data'] ?? 'Sem data';
+      if (!grupos.containsKey(data)) {
+        grupos[data] = [];
+      }
+      grupos[data]!.add(item);
+    }
+    return grupos;
+  }
 
   void _abrirAddDinheiro() async {
     final deposito = await Navigator.push(
@@ -79,7 +92,6 @@ class _PrincipalState extends State<Principal> {
     );
 
     if (despesa != null) {
-      print(despesa);
       setState(() {
         _historico.add(despesa);
       });
@@ -113,6 +125,10 @@ class _PrincipalState extends State<Principal> {
 
   @override
   Widget build(BuildContext context) {
+    //Executando o agrupamento dos dias
+    final historicoAgrupado = _agruparPorData();
+    final listaDeDatas = historicoAgrupado.keys.toList();
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: SafeArea(
@@ -183,74 +199,102 @@ class _PrincipalState extends State<Principal> {
 
               Expanded(
                 child: ListView.builder(
-                  itemCount: _historico.length,
-                  itemBuilder: (context, index) {
-                    final item = _historico[index];
-                    String valorMostrar;
-                    if (item['tipos'] == 'despesa,') {
-                      valorMostrar = "- €${item['valor'].toStringAsFixed(2)}";
-                    } else {
-                      valorMostrar = "+ €${item['valor'].toStringAsFixed(2)}";
-                    }
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: item['tipos'] == 'despesa,'
-                            ? AppTheme.corDespesa.withOpacity(0.15)
-                            : AppTheme.corDinheiro.withOpacity(0.15),
-                        child: Icon(
-                          item['tipos'] == 'despesa,'
-                              ? Icons.arrow_downward
-                              : Icons.arrow_upward,
-                          color: item['tipos'] == 'despesa,'
-                              ? AppTheme.corDespesa
-                              : AppTheme.corDinheiro,
-                          size: 20,
-                        ),
-                      ),
-                      title: Text(
-                        item['descricao'] ?? 'Sem descrição',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                  //lista do historico
+                  itemCount: listaDeDatas.length, //Quantidade de dias
+                  itemBuilder: (context, indexData) {
+                    final dataDoDia = listaDeDatas[indexData];
+                    final itensDoDia = historicoAgrupado[dataDoDia]!;
 
-                      // Data organizada como um subtítulo pequeno e discreto
-                      subtitle: Text(
-                        item['data'] ?? '',
-                        style: const TextStyle(
-                          color: Colors.white54,
-                          fontSize: 12,
-                        ),
-                      ),
-                      // Valor financeiro alinhado perfeitamente no lado direito
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            valorMostrar,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //inicio do cabeçario do dia
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 8.0,
+                          ),
+                          child: Text(
+                            dataDoDia,
                             style: TextStyle(
-                              fontSize: 15,
+                              color: AppTheme.corCianoNeon, //a cor do dia
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: item['tipos'] == 'despesa,'
-                                  ? AppTheme.corDespesa
-                                  : AppTheme.corDinheiro,
                             ),
                           ),
-                          if (item['tipos'] == 'despesa,') ...[
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                color: AppTheme.corDespesa,
+                        ),
+                        //Lista secundaria das transaçoes secundarias
+                        ...itensDoDia.map((item) {
+                          String valorMostrar;
+                          if (item['tipos'] == 'despesa,') {
+                            valorMostrar =
+                                "- €${item['valor'].toStringAsFixed(2)}";
+                          } else {
+                            valorMostrar =
+                                "+ €${item['valor'].toStringAsFixed(2)}";
+                          }
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: item['tipos'] == 'despesa,'
+                                  ? AppTheme.corDespesa.withOpacity(0.15)
+                                  : AppTheme.corDinheiro.withOpacity(0.15),
+                              child: Icon(
+                                item['tipos'] == 'despesa,'
+                                    ? Icons.arrow_downward
+                                    : Icons.arrow_upward,
+                                color: item['tipos'] == 'despesa,'
+                                    ? AppTheme.corDespesa
+                                    : AppTheme.corDinheiro,
                                 size: 20,
                               ),
-                              onPressed: () => _removerItem(index),
                             ),
-                          ],
-                        ],
-                      ),
+                            title: Text(
+                              item['descricao'] ?? 'Sem descrição',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+                            // Data organizada como um subtítulo pequeno e discreto
+                            subtitle: Text(
+                              item['data'] ?? '',
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 12,
+                              ),
+                            ),
+                            // Valor financeiro alinhado perfeitamente no lado direito
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  valorMostrar,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: item['tipos'] == 'despesa,'
+                                        ? AppTheme.corDespesa
+                                        : AppTheme.corDinheiro,
+                                  ),
+                                ),
+                                if (item['tipos'] == 'despesa,') ...[
+                                  const SizedBox(width: 8),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: AppTheme.corDespesa,
+                                      size: 20,
+                                    ),
+                                    onPressed: () => _removerItem(indexData),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
                     );
                   },
                 ),
