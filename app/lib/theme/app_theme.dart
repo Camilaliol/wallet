@@ -31,6 +31,7 @@ class AppTheme {
   ];
 
   //O design padrão das caixinhas das legendas (com cantos arredondados):
+  // cor da caixa do saldo
   static BoxDecoration caixaCustomizada = BoxDecoration(
     color: const Color(
       0xFF161035,
@@ -82,7 +83,7 @@ class AppTheme {
       // CONFIGURAÇÃO GLOBAL DE TODOS OS BOTÕES ELEVADOS
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 58, 8, 186), //
+          backgroundColor: corCianoNeon, //
           foregroundColor: const Color(
             0xFF070417,
           ), // Cor do Texto dentro do Botão
@@ -102,4 +103,4 @@ class AppTheme {
       ),
     ); // Fecha o ThemeData
   }
-} // Chave final que fecha a classe AppTheme inteira de forma correta!
+} // 👈 Chave final que fecha a classe AppTheme inteira de forma correta!
